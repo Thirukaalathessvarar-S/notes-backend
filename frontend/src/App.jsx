@@ -13,6 +13,7 @@ function App() {
   const [page, setPage] = useState('login');
 
   useEffect(() => {
+    console.log("Token:", token);
     if (token) {
       fetchNotes();
     }
