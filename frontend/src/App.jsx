@@ -11,20 +11,23 @@ function App() {
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [token, setToken] = useState(null);
   const [page, setPage] = useState('login');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Token:", token);
     if (token) {
       fetchNotes();
     }
   }, [token]);
 
   const fetchNotes = async () => {
+    setLoading(true);
     try {
       const fetchedNotes = await getNotes(token);
       setNotes(fetchedNotes);
     } catch (error) {
       console.error('Error fetching notes:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,16 +50,27 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await deleteNote(id, token);
-      fetchNotes();
-    } catch (error) {
-      console.error('Error deleting note:', error);
+    if (window.confirm('Are you sure you want to delete this note?')) {
+      try {
+        await deleteNote(id, token);
+        fetchNotes();
+      } catch (error) {
+        console.error('Error deleting note:', error);
+      }
     }
   };
 
   const handleEdit = (note) => {
     setNoteToEdit(note);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      setToken(null);
+      setNotes([]);
+      setNoteToEdit(null);
+    }
   };
 
   if (!token) {
@@ -73,19 +87,35 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Notes</h1>
-      <button onClick={() => setToken(null)}>Logout</button>
-      <NoteForm onSave={handleSave} noteToEdit={noteToEdit} />
-      <div className="notes-container">
-        {notes.map((note) => (
-          <Note
-            key={note.id}
-            note={note}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
-        ))}
+      <div className="app-header">
+        <h1>📔 My Notes</h1>
+        <button className="logout-btn" onClick={handleLogout}>
+          👋 Logout
+        </button>
       </div>
+
+      <NoteForm onSave={handleSave} noteToEdit={noteToEdit} />
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <div className="loading"></div>
+        </div>
+      ) : notes.length === 0 ? (
+        <div className="empty-state">
+          <p>📝 No notes yet. Create your first note above!</p>
+        </div>
+      ) : (
+        <div className="notes-container">
+          {notes.map((note) => (
+            <Note
+              key={note.id}
+              note={note}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Note = ({ note, onDelete, onEdit }) => {
@@ -6,8 +5,14 @@ const Note = ({ note, onDelete, onEdit }) => {
     <div className="note">
       <h2>{note.title}</h2>
       <p>{note.content}</p>
-      <button onClick={() => onEdit(note)}>Edit</button>
-      <button onClick={() => onDelete(note.id)}>Delete</button>
+      <div className="note-actions">
+        <button className="btn-edit" onClick={() => onEdit(note)}>
+          ✏️ Edit
+        </button>
+        <button className="btn-delete" onClick={() => onDelete(note.id)}>
+          🗑️ Delete
+        </button>
+      </div>
     </div>
   );
 };
