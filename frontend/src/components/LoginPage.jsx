@@ -14,6 +14,7 @@ const LoginPage = ({ setToken, setPage }) => {
     
     try {
       const data = await login({ username, password });
+      localStorage.setItem('token', data.jwt);
       setToken(data.jwt);
     } catch (err) {
       setError('Invalid credentials. Please try again.');
@@ -46,6 +47,7 @@ const LoginPage = ({ setToken, setPage }) => {
           <button type="submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
+          
           {error && <p className="error">{error}</p>}
         </form>
         <div className="auth-switch">

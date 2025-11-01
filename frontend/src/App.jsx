@@ -14,6 +14,13 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
+  useEffect(() => {
     if (token) {
       fetchNotes();
     }
@@ -67,6 +74,7 @@ function App() {
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('token');
       setToken(null);
       setNotes([]);
       setNoteToEdit(null);
