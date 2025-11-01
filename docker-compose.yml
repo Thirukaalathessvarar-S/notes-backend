@@ -6,7 +6,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/notes_db
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=eswar2005
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=your-secret-key
     depends_on:
       - db
@@ -17,4 +17,4 @@ services:
     environment:
       - POSTGRES_DB=notes_db
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=eswar2005
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
